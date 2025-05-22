@@ -69,6 +69,7 @@ public class InGameUI extends BorderPane {
 
     private HBox getMenuContainerButtons() {
         Button clearButton = new Button("clear");
+        
         clearButton.setCursor(Cursor.DEFAULT);
         clearButton.setOnAction(e -> {
             System.out.println("clear");

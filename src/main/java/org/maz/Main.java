@@ -1,5 +1,6 @@
 package org.maz;
 
+import atlantafx.base.theme.PrimerLight;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
@@ -8,6 +9,7 @@ import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.particle.ParticleComponent;
 import com.almasb.fxgl.time.TimerAction;
+import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.ImageCursor;
@@ -87,6 +89,7 @@ public class Main extends GameApplication {
 
     @Override
     protected void initGame() {
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         currentlySelected = EntityType.values()[0];
         getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(getImagename(currentlySelected))));
         Arrays.stream(EntityType.values()).forEach(type -> entityCounts
@@ -105,6 +108,8 @@ public class Main extends GameApplication {
 
     @Override
     protected void initUI() {
+
+
         InGameUI inGameUI = new InGameUI(entityCounts, totalCount);
         getGameScene().addUINode(inGameUI);
         inGameUI.getKillModeButton().setOnAction(e -> killmode = !killmode);
@@ -199,4 +204,6 @@ public class Main extends GameApplication {
     public static void main(String[] args) {
         launch(args);
     }
+
+
 }
