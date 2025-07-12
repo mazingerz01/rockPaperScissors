@@ -3,6 +3,7 @@ package org.maz;
 import atlantafx.base.theme.PrimerLight;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.dsl.EntityBuilder;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.Input;
@@ -25,14 +26,17 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
 
 public class Main extends GameApplication {
+    private static final double SCREEN_RATIO = 0.7;
+    private static final String VERSION = "0.1";
+
     private EntityType currentlySelected = EntityType.ROCK;
     private TimerAction spawnTimerAction;
-    private TimerAction removePowerUpTimerAction;
     private final EnumMap<EntityType, SimpleIntegerProperty> entityCounts = new EnumMap<>(EntityType.class);
     private final SimpleIntegerProperty totalCount = new SimpleIntegerProperty(0);
-    private static boolean killmode;
+    private static boolean killMode;
     private static boolean pauseMode;
-    private static Entity powerUp;
+
+    //xxxxm tribuo:  csv   e.g. for 1 line: 200,34,23,23,rock
 
     private interface IEntity {
     }
@@ -42,7 +46,7 @@ public class Main extends GameApplication {
     }
 
     public enum SpecialEntityType implements IEntity {
-        BLACK_HOLE, POWER_UP
+        ZAP_ZONE
     }
 
     UserAction mouseLeft = new UserAction("Mouse Left") {
@@ -68,23 +72,16 @@ public class Main extends GameApplication {
         }
     };
 
-    UserAction keyCodeB = new UserAction("Key B") {
-        @Override
-        protected void onActionBegin() {
-            //spawnEntity(BLACK_HOLE);
-        }
-    };
-
     @Override
     protected void initSettings(GameSettings settings) {
         settings.setTitle("Rock Paper Scissors");
-        settings.setVersion("1.0");
+        settings.setVersion(VERSION);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//        settings.setFullScreenAllowed(true);
-//        settings.setFullScreenFromStart(true);
-        settings.setWidth((int) screenSize.getWidth());
-        settings.setHeight((int) screenSize.getHeight());
+        settings.setFullScreenAllowed(true);
+        // settings.setFullScreenFromStart(true);
+        settings.setWidth((int) (screenSize.getWidth() * SCREEN_RATIO));
+        settings.setHeight((int) (screenSize.getHeight() * SCREEN_RATIO));
     }
 
     @Override
@@ -97,57 +94,33 @@ public class Main extends GameApplication {
 
         spawnTimerAction = getGameTimer().runAtInterval(() -> spawnEntity(currentlySelected), Duration.seconds(0.08));
         spawnTimerAction.pause();
-
-        removePowerUpTimerAction = getGameTimer().runAtInterval(() -> {
-            if (powerUp != null) {
-                getGameWorld().removeEntity(powerUp);
-                powerUp = null;
-            }
-        }, Duration.seconds(8));
     }
 
     @Override
     protected void initUI() {
-
-
         InGameUI inGameUI = new InGameUI(entityCounts, totalCount);
         getGameScene().addUINode(inGameUI);
-        inGameUI.getKillModeButton().setOnAction(e -> killmode = !killmode);
-        inGameUI.getPlayPauseButton().setOnAction(e -> {
-            if (pauseMode) {
-                getGameWorld().getEntities().forEach(entity -> {
-                    entity.removeComponent(FloatMoveComponent.class);
-                    entity.addComponent(new MoveComponent());
-                });
-            } else {
-                getGameWorld().getEntities().forEach(entity -> {
-                    entity.removeComponent(MoveComponent.class);
-                    entity.addComponent(new FloatMoveComponent());
-                });
-            }
-            pauseMode = !pauseMode;
-        });
     }
 
     @Override
     protected void initPhysics() {
         onCollisionBegin(EntityType.ROCK, EntityType.PAPER, (r, p) -> {
             r.removeFromWorld();
-            if (!killmode) {
+            if (!killMode) {
                 spawnEntity(EntityType.PAPER, r.getAnchoredPosition())
                         .addComponent(new ParticleComponent(CollisionEmitterFactory.getCollisionEmitter()));
             }
         });
         onCollisionBegin(EntityType.ROCK, EntityType.SCISSORS, (r, s) -> {
             s.removeFromWorld();
-            if (!killmode) {
+            if (!killMode) {
                 spawnEntity(EntityType.ROCK, s.getAnchoredPosition())
                         .addComponent(new ParticleComponent(CollisionEmitterFactory.getCollisionEmitter()));
             }
         });
         onCollisionBegin(EntityType.PAPER, EntityType.SCISSORS, (p, s) -> {
             p.removeFromWorld();
-            if (!killmode) {
+            if (!killMode) {
                 spawnEntity(EntityType.SCISSORS, p.getAnchoredPosition())
                         .addComponent(new ParticleComponent(CollisionEmitterFactory.getCollisionEmitter()));
             }
@@ -172,38 +145,49 @@ public class Main extends GameApplication {
         totalCount.set(total.get());
     }
 
-    private <E extends Enum<E> & IEntity> Entity spawnEntity(E entityType, Point2D... location) {
-        String texture = getImagename(entityType);
-        Entity entity = entityBuilder()
+    static <E extends Enum<E> & IEntity> Entity spawnEntity(E entityType, Point2D... location) {
+        EntityBuilder entityBuilder = entityBuilder()
                 .type(entityType)
                 .at(location.length == 1 ? location[0] : new Point2D(getInput().getMouseXWorld(), getInput().getMouseYWorld()))
-                .viewWithBBox(texture)
-                .collidable()
-                .buildAndAttach();
-        if (entityType != SpecialEntityType.POWER_UP) {
+                .collidable();
+        if (entityType instanceof EntityType) {
+            entityBuilder.viewWithBBox(getImagename(entityType));
+        } else {
+            entityBuilder.viewWithBBox(new ZapZone());
+        }
+        Entity entity = entityBuilder.buildAndAttach();
+
+        if (entityType != SpecialEntityType.ZAP_ZONE) {
             entity.addComponent(pauseMode ? new FloatMoveComponent() : new MoveComponent());
         }
         return entity;
     }
 
-    private <E extends Enum<E> & IEntity> String getImagename(E entityType) {
-        if (entityType instanceof EntityType) {
-            return switch ((EntityType) entityType) {
-                case ROCK -> "rock.png";
-                case PAPER -> "paper.png";
-                case SCISSORS -> "scissors.png";
-            };
-        } else {
-            return switch ((SpecialEntityType) entityType) {
-                case BLACK_HOLE -> "blackhole.png";
-                case POWER_UP -> "powerup.png";
-            };
-        }
+    private static <E extends Enum<E> & IEntity> String getImagename(E entityType) {
+        return switch ((EntityType) entityType) {
+            case ROCK -> "rock.png";
+            case PAPER -> "paper.png";
+            case SCISSORS -> "scissors.png";
+        };
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    public static void setKillMode(boolean killMode) {
+        Main.killMode = killMode;
+    }
 
+    public static boolean isKillMode() {
+        return killMode;
+    }
+
+    public static boolean isPauseMode() {
+        return pauseMode;
+    }
+
+    public static void setPauseMode(boolean pauseMode) {
+        Main.pauseMode = pauseMode;
+    }
 }
