@@ -1,4 +1,4 @@
-package org.maz;
+package org.maz.zapzone;
 
 import atlantafx.base.theme.Styles;
 import javafx.animation.ScaleTransition;
@@ -10,11 +10,11 @@ import javafx.util.Duration;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
 
 public class ZapZoneButton extends Button {
-
-    ZapZoneButton() {
+    public ZapZoneButton() {
         setAlignment(Pos.CENTER);
         setTranslateX(10);
         FontIcon zap = new FontIcon(Feather.ZAP);
@@ -22,7 +22,7 @@ public class ZapZoneButton extends Button {
         getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.BUTTON_ICON);
         setOnAction((event -> {
             getGameScene().setCursor(Cursor.NONE);
-            Main.spawnEntity(Main.SpecialEntityType.ZAP_ZONE);
+            getGameWorld().addEntity(new ZapZone());
         }));
         applyAnimations();
         setOpacity(0.4);

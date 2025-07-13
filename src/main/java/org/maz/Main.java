@@ -16,6 +16,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.ImageCursor;
 import javafx.scene.input.MouseButton;
 import javafx.util.Duration;
+import org.maz.components.FloatMoveComponent;
+import org.maz.components.MoveComponent;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -26,7 +28,7 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
 
 public class Main extends GameApplication {
-    private static final double SCREEN_RATIO = 0.7;
+    private static final double SCREEN_RATIO = 0.8;
     private static final String VERSION = "0.1";
 
     private EntityType currentlySelected = EntityType.ROCK;
@@ -35,6 +37,7 @@ public class Main extends GameApplication {
     private final SimpleIntegerProperty totalCount = new SimpleIntegerProperty(0);
     private static boolean killMode;
     private static boolean pauseMode;
+    private static boolean zapZone;
 
     //xxxxm tribuo:  csv   e.g. for 1 line: 200,34,23,23,rock
 
@@ -52,13 +55,13 @@ public class Main extends GameApplication {
     UserAction mouseLeft = new UserAction("Mouse Left") {
         @Override
         protected void onActionBegin() {
-            spawnEntity(currentlySelected);
-            spawnTimerAction.resume();
+            // There is no possibility of resetting the timer, so create a new one
+            spawnTimerAction = getGameTimer().runAtInterval(() -> spawnEntity(currentlySelected), Duration.seconds(0.08));
         }
 
         @Override
         protected void onActionEnd() {
-            spawnTimerAction.pause();
+            spawnTimerAction.expire();
         }
     };
 
@@ -91,9 +94,6 @@ public class Main extends GameApplication {
         getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(getImagename(currentlySelected))));
         Arrays.stream(EntityType.values()).forEach(type -> entityCounts
                 .put(type, new SimpleIntegerProperty(0)));
-
-        spawnTimerAction = getGameTimer().runAtInterval(() -> spawnEntity(currentlySelected), Duration.seconds(0.08));
-        spawnTimerAction.pause();
     }
 
     @Override
@@ -149,17 +149,10 @@ public class Main extends GameApplication {
         EntityBuilder entityBuilder = entityBuilder()
                 .type(entityType)
                 .at(location.length == 1 ? location[0] : new Point2D(getInput().getMouseXWorld(), getInput().getMouseYWorld()))
-                .collidable();
-        if (entityType instanceof EntityType) {
-            entityBuilder.viewWithBBox(getImagename(entityType));
-        } else {
-            entityBuilder.viewWithBBox(new ZapZone());
-        }
+                .collidable()
+                .viewWithBBox(getImagename(entityType));
         Entity entity = entityBuilder.buildAndAttach();
-
-        if (entityType != SpecialEntityType.ZAP_ZONE) {
-            entity.addComponent(pauseMode ? new FloatMoveComponent() : new MoveComponent());
-        }
+        entity.addComponent(pauseMode ? new FloatMoveComponent() : new MoveComponent());
         return entity;
     }
 
@@ -189,5 +182,9 @@ public class Main extends GameApplication {
 
     public static void setPauseMode(boolean pauseMode) {
         Main.pauseMode = pauseMode;
+    }
+
+    public static void setZapZone(boolean zapZone) {
+        Main.zapZone = zapZone;
     }
 }

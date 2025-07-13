@@ -36,3 +36,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/system/fxgl.bundle
+/.idea/uiDesigner.xml
+/.idea/vcs.xml

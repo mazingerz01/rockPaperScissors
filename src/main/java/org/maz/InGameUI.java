@@ -14,6 +14,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignS;
+import org.maz.components.FloatMoveComponent;
+import org.maz.components.MoveComponent;
+import org.maz.zapzone.ZapZoneButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;

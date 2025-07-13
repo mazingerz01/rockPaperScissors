@@ -1,11 +1,10 @@
-package org.maz;
-
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
-
-import javafx.geometry.Point2D;
+package org.maz.components;
 
 import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.entity.component.Component;
+import javafx.geometry.Point2D;
+
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
 
 public class FloatMoveComponent extends Component {
 
