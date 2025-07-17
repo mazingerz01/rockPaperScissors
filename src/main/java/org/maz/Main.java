@@ -7,15 +7,12 @@ import com.almasb.fxgl.dsl.EntityBuilder;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.Input;
-import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.particle.ParticleComponent;
-import com.almasb.fxgl.time.TimerAction;
 import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.ImageCursor;
 import javafx.scene.input.MouseButton;
-import javafx.util.Duration;
 import org.maz.components.FloatMoveComponent;
 import org.maz.components.MoveComponent;
 
@@ -31,15 +28,16 @@ public class Main extends GameApplication {
     private static final double SCREEN_RATIO = 0.8;
     private static final String VERSION = "0.1";
 
-    private EntityType currentlySelected = EntityType.ROCK;
-    private TimerAction spawnTimerAction;
+    private static EntityType currentlySelected = EntityType.ROCK;
     private final EnumMap<EntityType, SimpleIntegerProperty> entityCounts = new EnumMap<>(EntityType.class);
     private final SimpleIntegerProperty totalCount = new SimpleIntegerProperty(0);
     private static boolean killMode;
     private static boolean pauseMode;
-    private static boolean zapZone;
+    private static Entity zapZone;
 
     //xxxxm tribuo:  csv   e.g. for 1 line: 200,34,23,23,rock
+
+    // TODO zapzone works only with 2nd click beginning with 2nd use
 
     private interface IEntity {
     }
@@ -51,29 +49,6 @@ public class Main extends GameApplication {
     public enum SpecialEntityType implements IEntity {
         ZAP_ZONE
     }
-
-    UserAction mouseLeft = new UserAction("Mouse Left") {
-        @Override
-        protected void onActionBegin() {
-            // There is no possibility of resetting the timer, so create a new one
-            spawnTimerAction = getGameTimer().runAtInterval(() -> spawnEntity(currentlySelected), Duration.seconds(0.08));
-        }
-
-        @Override
-        protected void onActionEnd() {
-            spawnTimerAction.expire();
-        }
-    };
-
-    UserAction mouseRight = new UserAction("Mouse Right") {
-        @Override
-        protected void onActionBegin() {
-            int newIndex =
-                    currentlySelected.ordinal() == EntityType.values().length - 1 ? 0 : currentlySelected.ordinal() + 1;
-            currentlySelected = EntityType.values()[newIndex];
-            getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(getImagename(currentlySelected))));
-        }
-    };
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -130,8 +105,8 @@ public class Main extends GameApplication {
     @Override
     protected void initInput() {
         Input input = getInput();
-        input.addAction(mouseLeft, MouseButton.PRIMARY);
-        input.addAction(mouseRight, MouseButton.SECONDARY);
+        input.addAction(UserActionFactory.createMouseLeft(), MouseButton.PRIMARY);
+        input.addAction(UserActionFactory.createMouseRight(), MouseButton.SECONDARY);
     }
 
     @Override
@@ -156,7 +131,7 @@ public class Main extends GameApplication {
         return entity;
     }
 
-    private static <E extends Enum<E> & IEntity> String getImagename(E entityType) {
+    static <E extends Enum<E> & IEntity> String getImagename(E entityType) {
         return switch ((EntityType) entityType) {
             case ROCK -> "rock.png";
             case PAPER -> "paper.png";
@@ -184,7 +159,23 @@ public class Main extends GameApplication {
         Main.pauseMode = pauseMode;
     }
 
-    public static void setZapZone(boolean zapZone) {
-        Main.zapZone = zapZone;
+    public static void setZapZone(Entity entity) {
+        Main.zapZone = entity;
+        if (entity != null) {
+            getGameWorld().addEntity(entity);
+        }
     }
+
+    public static Entity getZapZone() {
+        return zapZone;
+    }
+
+    public static EntityType getCurrentlySelected() {
+        return currentlySelected;
+    }
+
+    public static void setCurrentlySelected(EntityType value) {
+        currentlySelected = value;
+    }
+
 }

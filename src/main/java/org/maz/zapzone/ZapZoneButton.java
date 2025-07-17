@@ -9,8 +9,8 @@ import javafx.scene.control.Button;
 import javafx.util.Duration;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.maz.Main;
 
-import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
 
 public class ZapZoneButton extends Button {
@@ -22,7 +22,7 @@ public class ZapZoneButton extends Button {
         getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.BUTTON_ICON);
         setOnAction((event -> {
             getGameScene().setCursor(Cursor.NONE);
-            getGameWorld().addEntity(new ZapZone());
+            Main.setZapZone(new ZapZone());
         }));
         applyAnimations();
         setOpacity(0.4);

@@ -66,12 +66,12 @@ public class InGameUI extends BorderPane {
 
         ToggleButton playPauseButton = ButtonFactory.createToggleButton(Feather.PAUSE_CIRCLE, e -> {
             if (Main.isPauseMode()) {
-                getGameWorld().getEntities().forEach(entity -> {
+                getGameWorld().getEntities().stream().filter(ent -> !ent.isType(Main.SpecialEntityType.ZAP_ZONE)).forEach(entity -> {
                     entity.removeComponent(FloatMoveComponent.class);
                     entity.addComponent(new MoveComponent());
                 });
             } else {
-                getGameWorld().getEntities().forEach(entity -> {
+                getGameWorld().getEntities().stream().filter(ent -> !ent.isType(Main.SpecialEntityType.ZAP_ZONE)).forEach(entity -> {
                     entity.removeComponent(MoveComponent.class);
                     entity.addComponent(new FloatMoveComponent());
                 });

@@ -19,7 +19,6 @@ public class ZapZone extends Entity {
         this.addComponent(new RotateComponent());
         // entity.addComponent(new BoundingBoxComponent());
         // entity.collidable()
-        Main.setZapZone(true);
         this.xProperty().bind(getGameScene().getInput().mouseXWorldProperty());
         this.yProperty().bind(getGameScene().getInput().mouseYWorldProperty());
     }
@@ -34,7 +33,6 @@ public class ZapZone extends Entity {
         circle.setStrokeLineCap(StrokeLineCap.ROUND);
         return circle;
     }
-
 
     /*xxxm
     static     TimerAction removeZapZoneTimerAction = getGameTimer().runAtInterval(() -> {
