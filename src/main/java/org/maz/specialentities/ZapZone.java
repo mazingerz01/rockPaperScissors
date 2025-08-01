@@ -1,4 +1,4 @@
-package org.maz.zapzone;
+package org.maz.specialentities;
 
 import com.almasb.fxgl.entity.Entity;
 import javafx.scene.layout.BackgroundFill;
@@ -12,20 +12,20 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getInput;
 
 public class ZapZone extends Entity {
+    public static final double RADIUS = 100.0;
+
     public ZapZone() {
         this.setType(Main.SpecialEntityType.ZAP_ZONE);
         this.setPosition(getInput().getMouseXWorld(), getInput().getMouseYWorld());
         this.getViewComponent().addChild(getCircleShape());
         this.addComponent(new RotateComponent());
-        // entity.addComponent(new BoundingBoxComponent());
-        // entity.collidable()
+
         this.xProperty().bind(getGameScene().getInput().mouseXWorldProperty());
         this.yProperty().bind(getGameScene().getInput().mouseYWorldProperty());
     }
 
     private Circle getCircleShape() {
-        Circle circle = new Circle(100.0);
-        circle.setRadius(100.0);
+        Circle circle = new Circle(RADIUS);
         circle.setStroke(Color.MAGENTA);
         circle.setFill(new BackgroundFill(new Color(0.99, 0.28, 0.75, 0.15), null, null).getFill());
         circle.setStrokeWidth(3);
@@ -33,15 +33,5 @@ public class ZapZone extends Entity {
         circle.setStrokeLineCap(StrokeLineCap.ROUND);
         return circle;
     }
-
-    /*xxxm
-    static     TimerAction removeZapZoneTimerAction = getGameTimer().runAtInterval(() -> {
-        if (zapZone != null) {
-            getGameWorld().removeEntity(zapZone);
-            zapZone = null;
-        }
-    }, Duration.seconds(8));
-
- */
 
 }

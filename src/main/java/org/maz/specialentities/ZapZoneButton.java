@@ -1,4 +1,4 @@
-package org.maz.zapzone;
+package org.maz.specialentities;
 
 import atlantafx.base.theme.Styles;
 import javafx.animation.ScaleTransition;
@@ -20,7 +20,7 @@ public class ZapZoneButton extends Button {
         FontIcon zap = new FontIcon(Feather.ZAP);
         setGraphic(zap);
         getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.BUTTON_ICON);
-        setOnAction((event -> {
+        setOnMouseClicked((event -> {
             getGameScene().setCursor(Cursor.NONE);
             Main.setZapZone(new ZapZone());
         }));
@@ -28,13 +28,11 @@ public class ZapZoneButton extends Button {
         setOpacity(0.4);
     }
 
-    private void applyAnimations() {//}, ImageView powerUpImageView) {
+    private void applyAnimations() {
         // Slowly make powerup visible
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(2), this);  //xxxm set to 15sec
         translateTransition.setFromY(-50);
         translateTransition.setToY(0);
-        //translateTransition.setFromX(1);
-        //translateTransition.setToX(1);
         translateTransition.setOnFinished((event) -> {
             setOpacity(1.0);
             // Pulse animation

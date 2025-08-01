@@ -1,20 +1,24 @@
 package org.maz;
 
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.dsl.FXGLForKtKt;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.logging.Logger;
+import com.almasb.fxgl.particle.ParticleEmitter;
 import com.almasb.fxgl.time.TimerAction;
-import javafx.scene.Cursor;
+import javafx.application.Platform;
 import javafx.scene.ImageCursor;
 import javafx.util.Duration;
+import org.maz.specialentities.ZapZone;
 
 import java.util.List;
 
-import static com.almasb.fxgl.dsl.FXGL.getGameTimer;
-import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameWorld;
 
 public class UserActionFactory {
+    private static final Logger LOGGER = Logger.get("xxxm");
     private static TimerAction spawnTimerAction;
 
     public static UserAction createMouseLeft() {
@@ -22,33 +26,45 @@ public class UserActionFactory {
             @Override
             protected void onActionBegin() {
                 if (Main.getZapZone() != null) {
-                    List<Entity> removeList = getGameWorld().getEntities().stream().filter(ent -> ent.distanceBBox(Main.getZapZone()) < 100).toList();
-                    getGameWorld().removeEntities(removeList);
-                    getGameWorld().removeEntity(Main.getZapZone());
-                    Main.setZapZone(null);
-                    getGameScene().setCursor(Cursor.DEFAULT);
+                    List<Entity> removeList = getGameWorld().getEntities().stream().filter(ent -> ent.distanceBBox(Main.getZapZone()) < ZapZone.RADIUS).toList();
+                    // Entitylist for removal also contains zapZone.
+                    removeList.forEach(e -> {
+                        if (e.getType() != Main.SpecialEntityType.ZAP_ZONE) {
+                            ParticleEmitter emitter = CollisionEmitterFactory.getCollisionEmitter();
+                            Main.getParticleSystem().addParticleEmitter(emitter, e.getX(), e.getY());
+                        }
+                    });
+                    Platform.runLater(() -> {
+                        // onActionEnd will not be triggered if runLater is not used. https://github.com/AlmasB/FXGL/discussions/1426
+                        getGameWorld().removeEntities(removeList);
+                        Main.setZapZone(null);
+                    });
+                    getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(Main.getImagename(Main.getCurrentlySelected()))));
                 } else {
                     // There is no possibility of resetting the timer, so create a new one
-                    spawnTimerAction = getGameTimer().runAtInterval(() -> Main.spawnEntity(Main.getCurrentlySelected()), Duration.seconds(0.08));
+                    spawnTimerAction = FXGLForKtKt.getGameTimer().runAtInterval(() -> Main.spawnEntity(Main.getCurrentlySelected()), Duration.seconds(0.08));
                 }
             }
 
             @Override
             protected void onActionEnd() {
-                spawnTimerAction.expire();
+                if (Main.getZapZone() == null) {
+                    spawnTimerAction.expire();
+                }
             }
         };
-
     }
 
     public static UserAction createMouseRight() {
         return new UserAction("mouse right") {
             @Override
             protected void onActionBegin() {
-                int newIndex =
-                        Main.getCurrentlySelected().ordinal() == Main.EntityType.values().length - 1 ? 0 : Main.getCurrentlySelected().ordinal() + 1;
-                Main.setCurrentlySelected(Main.EntityType.values()[newIndex]);
-                getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(Main.getImagename(Main.getCurrentlySelected()))));
+                if (Main.getZapZone() == null) {
+                    int newIndex =
+                            Main.getCurrentlySelected().ordinal() == Main.EntityType.values().length - 1 ? 0 : Main.getCurrentlySelected().ordinal() + 1;
+                    Main.setCurrentlySelected(Main.EntityType.values()[newIndex]);
+                    getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(Main.getImagename(Main.getCurrentlySelected()))));
+                }
             }
         };
     }

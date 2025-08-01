@@ -1,7 +1,10 @@
 package org.maz;
 
-import com.almasb.fxgl.entity.Entity;
+import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getAppWidth;
+
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -12,19 +15,15 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.util.Arrays;
+import java.util.EnumMap;
+
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignS;
 import org.maz.components.FloatMoveComponent;
 import org.maz.components.MoveComponent;
-import org.maz.zapzone.ZapZoneButton;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
-
-import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getAppWidth;
+import org.maz.specialentities.ZapZoneButton;
 
 public class InGameUI extends BorderPane {
     InGameUI(EnumMap<Main.EntityType, SimpleIntegerProperty> entityCounts, SimpleIntegerProperty totalCount) {
@@ -43,7 +42,7 @@ public class InGameUI extends BorderPane {
             Label progressBarLabel = new Label(type.name());
             ProgressBar progressBar = new javafx.scene.control.ProgressBar();
             progressBar.setPrefWidth(200.0);
-            progressBar.progressProperty().bind(entityCounts.get(type).divide(totalCount.add(0.1)));
+            progressBar.progressProperty().bind(entityCounts.get(type).divide(totalCount.add(0.1))); // Prevent division by zero
             HBox hBox = new HBox(progressBarLabel, progressBar);
             hBox.setSpacing(10);
             hBox.setAlignment(Pos.CENTER_RIGHT);
@@ -57,8 +56,8 @@ public class InGameUI extends BorderPane {
 
     private HBox getMenuContainerButtons() {
         Button clearButton = ButtonFactory.createButton(Feather.X_CIRCLE, e -> {
-            List<Entity> entities = new ArrayList<>(getGameWorld().getEntities());
-            getGameWorld().removeEntities(entities);
+            getGameWorld().removeEntities(getGameWorld().getEntitiesCopy());
+            // getInput().clearAll();
         });
 
         ToggleButton killModeButton = ButtonFactory.createToggleButton(MaterialDesignS.SKULL_CROSSBONES_OUTLINE,
@@ -70,7 +69,8 @@ public class InGameUI extends BorderPane {
                     entity.removeComponent(FloatMoveComponent.class);
                     entity.addComponent(new MoveComponent());
                 });
-            } else {
+            }
+            else {
                 getGameWorld().getEntities().stream().filter(ent -> !ent.isType(Main.SpecialEntityType.ZAP_ZONE)).forEach(entity -> {
                     entity.removeComponent(MoveComponent.class);
                     entity.addComponent(new FloatMoveComponent());
@@ -85,6 +85,7 @@ public class InGameUI extends BorderPane {
         menuContainerButtons.setTranslateX(10);
         menuContainerButtons.setCursor(Cursor.DEFAULT);
         menuContainerButtons.setMaxHeight(0);
+        menuContainerButtons.setOnMouseClicked(Event::consume);
         return menuContainerButtons;
     }
 

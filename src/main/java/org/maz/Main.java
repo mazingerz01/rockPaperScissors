@@ -1,39 +1,58 @@
 package org.maz;
 
+import static com.almasb.fxgl.dsl.FXGL.animationBuilder;
+import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
+import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
+import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
+import static com.almasb.fxgl.dsl.FXGL.getInput;
+import static com.almasb.fxgl.dsl.FXGL.onCollisionBegin;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
+
+import javafx.application.Application;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Point2D;
+import javafx.scene.ImageCursor;
+import javafx.scene.input.MouseButton;
+import javafx.util.Duration;
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.concurrent.atomic.AtomicReference;
+
 import atlantafx.base.theme.PrimerLight;
+import com.almasb.fxgl.animation.AnimatedValue;
+import com.almasb.fxgl.animation.Animation;
+import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.EntityBuilder;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.Input;
+import com.almasb.fxgl.logging.Logger;
 import com.almasb.fxgl.particle.ParticleComponent;
-import javafx.application.Application;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.geometry.Point2D;
-import javafx.scene.ImageCursor;
-import javafx.scene.input.MouseButton;
+import com.almasb.fxgl.particle.ParticleSystem;
 import org.maz.components.FloatMoveComponent;
 import org.maz.components.MoveComponent;
-
-import java.awt.*;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static com.almasb.fxgl.dsl.FXGL.*;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
+import org.maz.menu.RPSSceneFactory;
+import org.maz.specialentities.ZapZone;
 
 public class Main extends GameApplication {
-    private static final double SCREEN_RATIO = 0.8;
+    private static final Logger LOGGER = Logger.get(Main.class);
+
+    private static final double SCREEN_RATIO = 0.9;
     private static final String VERSION = "0.1";
 
     private static EntityType currentlySelected = EntityType.ROCK;
     private final EnumMap<EntityType, SimpleIntegerProperty> entityCounts = new EnumMap<>(EntityType.class);
     private final SimpleIntegerProperty totalCount = new SimpleIntegerProperty(0);
+    private static final ParticleSystem particleSystem = new ParticleSystem();
+
     private static boolean killMode;
     private static boolean pauseMode;
-    private static Entity zapZone;
+    private static ZapZone zapZone;
 
     //xxxxm tribuo:  csv   e.g. for 1 line: 200,34,23,23,rock
 
@@ -57,9 +76,10 @@ public class Main extends GameApplication {
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         settings.setFullScreenAllowed(true);
-        // settings.setFullScreenFromStart(true);
+        settings.setFullScreenFromStart(false);   // via menue?
         settings.setWidth((int) (screenSize.getWidth() * SCREEN_RATIO));
         settings.setHeight((int) (screenSize.getHeight() * SCREEN_RATIO));
+        settings.setSceneFactory(new RPSSceneFactory());
     }
 
     @Override
@@ -69,12 +89,8 @@ public class Main extends GameApplication {
         getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(getImagename(currentlySelected))));
         Arrays.stream(EntityType.values()).forEach(type -> entityCounts
                 .put(type, new SimpleIntegerProperty(0)));
-    }
-
-    @Override
-    protected void initUI() {
-        InGameUI inGameUI = new InGameUI(entityCounts, totalCount);
-        getGameScene().addUINode(inGameUI);
+        getGameScene().addChild(particleSystem.getPane());
+        particleSystem.getPane().setMouseTransparent(true);
     }
 
     @Override
@@ -110,6 +126,13 @@ public class Main extends GameApplication {
     }
 
     @Override
+    protected void initUI() {
+        InGameUI inGameUI = new InGameUI(entityCounts, totalCount);
+        getGameScene().addUINode(inGameUI);
+        getGameScene().setUIMouseTransparent(false);
+    }
+
+    @Override
     protected void onUpdate(double tpf) {
         AtomicReference<Integer> total = new AtomicReference<>(0);
         Arrays.stream(EntityType.values()).forEach(type -> {
@@ -118,6 +141,7 @@ public class Main extends GameApplication {
             total.updateAndGet(v -> v + n);
         });
         totalCount.set(total.get());
+        particleSystem.onUpdate(tpf);
     }
 
     static <E extends Enum<E> & IEntity> Entity spawnEntity(E entityType, Point2D... location) {
@@ -159,15 +183,19 @@ public class Main extends GameApplication {
         Main.pauseMode = pauseMode;
     }
 
-    public static void setZapZone(Entity entity) {
+    public static void setZapZone(ZapZone entity) {
         Main.zapZone = entity;
         if (entity != null) {
             getGameWorld().addEntity(entity);
         }
     }
 
-    public static Entity getZapZone() {
+    public static ZapZone getZapZone() {
         return zapZone;
+    }
+
+    public static ParticleSystem getParticleSystem() {
+        return particleSystem;
     }
 
     public static EntityType getCurrentlySelected() {
@@ -176,6 +204,19 @@ public class Main extends GameApplication {
 
     public static void setCurrentlySelected(EntityType value) {
         currentlySelected = value;
+    }
+
+    private void animateCamera(Runnable onAnimationFinished) {
+        AnimatedValue<Double> value = new AnimatedValue<>(getAppHeight() * 1.0, 0.0);
+        Animation<Double> cameraAnimation = animationBuilder()
+                .duration(Duration.seconds(0.5))
+                .interpolator(Interpolators.EXPONENTIAL.EASE_OUT())
+                .onFinished(onAnimationFinished::run)
+                .animate(value)
+                .onProgress(y -> FXGL.getGameScene().getViewport().setY(y))
+                .build();
+
+        cameraAnimation.start();
     }
 
 }
