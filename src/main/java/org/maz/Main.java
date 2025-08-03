@@ -43,7 +43,7 @@ public class Main extends GameApplication {
     private static final Logger LOGGER = Logger.get(Main.class);
 
     private static final double SCREEN_RATIO = 0.9;
-    private static final String VERSION = "0.1";
+    public static final String VERSION = "1.0";
 
     private static EntityType currentlySelected = EntityType.ROCK;
     private final EnumMap<EntityType, SimpleIntegerProperty> entityCounts = new EnumMap<>(EntityType.class);
@@ -80,6 +80,8 @@ public class Main extends GameApplication {
         settings.setWidth((int) (screenSize.getWidth() * SCREEN_RATIO));
         settings.setHeight((int) (screenSize.getHeight() * SCREEN_RATIO));
         settings.setSceneFactory(new RPSSceneFactory());
+        settings.setMainMenuEnabled(false);
+        settings.setDeveloperMenuEnabled(false);
     }
 
     @Override
@@ -155,7 +157,7 @@ public class Main extends GameApplication {
         return entity;
     }
 
-    static <E extends Enum<E> & IEntity> String getImagename(E entityType) {
+    public static <E extends Enum<E> & IEntity> String getImagename(E entityType) {
         return switch ((EntityType) entityType) {
             case ROCK -> "rock.png";
             case PAPER -> "paper.png";
