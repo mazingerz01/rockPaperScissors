@@ -1,10 +1,11 @@
-package org.maz;
+package org.maz.rps;
 
-import com.almasb.fxgl.particle.ParticleEmitter;
 import javafx.geometry.Point2D;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+
+import com.almasb.fxgl.particle.ParticleEmitter;
 
 public class CollisionEmitterFactory {
     public static ParticleEmitter getCollisionEmitter() {

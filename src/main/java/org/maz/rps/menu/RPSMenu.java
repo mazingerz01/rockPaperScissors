@@ -1,4 +1,4 @@
-package org.maz.menu;
+package org.maz.rps.menu;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
 
@@ -22,7 +22,7 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.ui.FontType;
-import org.maz.Main;
+import org.maz.rps.Main;
 
 public class RPSMenu extends FXGLMenu {
 

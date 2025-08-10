@@ -1,15 +1,16 @@
-package org.maz.specialentities;
+package org.maz.rps.specialentities;
 
-import com.almasb.fxgl.entity.Entity;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getInput;
+
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeLineCap;
-import org.maz.Main;
-import org.maz.components.RotateComponent;
 
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getInput;
+import com.almasb.fxgl.entity.Entity;
+import org.maz.rps.Main;
+import org.maz.rps.components.RotateComponent;
 
 public class ZapZone extends Entity {
     public static final double RADIUS = 100.0;

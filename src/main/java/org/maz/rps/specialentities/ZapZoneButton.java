@@ -1,17 +1,18 @@
-package org.maz.specialentities;
+package org.maz.rps.specialentities;
 
-import atlantafx.base.theme.Styles;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
+
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.util.Duration;
+
+import atlantafx.base.theme.Styles;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.maz.Main;
-
-import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
+import org.maz.rps.Main;
 
 public class ZapZoneButton extends Button {
     public ZapZoneButton() {

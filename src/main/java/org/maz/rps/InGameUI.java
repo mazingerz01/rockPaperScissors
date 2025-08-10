@@ -1,4 +1,4 @@
-package org.maz;
+package org.maz.rps;
 
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getAppWidth;
@@ -21,9 +21,9 @@ import java.util.EnumMap;
 
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignS;
-import org.maz.components.FloatMoveComponent;
-import org.maz.components.MoveComponent;
-import org.maz.specialentities.ZapZoneButton;
+import org.maz.rps.components.FloatMoveComponent;
+import org.maz.rps.components.MoveComponent;
+import org.maz.rps.specialentities.ZapZoneButton;
 
 public class InGameUI extends BorderPane {
     InGameUI(EnumMap<Main.EntityType, SimpleIntegerProperty> entityCounts, SimpleIntegerProperty totalCount) {

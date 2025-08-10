@@ -1,4 +1,4 @@
-package org.maz.menu;
+package org.maz.rps.menu;
 
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.SceneFactory;

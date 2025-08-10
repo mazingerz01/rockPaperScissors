@@ -1,4 +1,4 @@
-package org.maz;
+package org.maz.rps;
 
 import static com.almasb.fxgl.dsl.FXGL.animationBuilder;
 import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
@@ -12,7 +12,6 @@ import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.ImageCursor;
-import javafx.scene.input.MouseButton;
 import javafx.util.Duration;
 
 import java.awt.Dimension;
@@ -34,10 +33,10 @@ import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.logging.Logger;
 import com.almasb.fxgl.particle.ParticleComponent;
 import com.almasb.fxgl.particle.ParticleSystem;
-import org.maz.components.FloatMoveComponent;
-import org.maz.components.MoveComponent;
-import org.maz.menu.RPSSceneFactory;
-import org.maz.specialentities.ZapZone;
+import org.maz.rps.components.FloatMoveComponent;
+import org.maz.rps.components.MoveComponent;
+import org.maz.rps.menu.RPSSceneFactory;
+import org.maz.rps.specialentities.ZapZone;
 
 public class Main extends GameApplication {
     private static final Logger LOGGER = Logger.get(Main.class);
@@ -123,8 +122,7 @@ public class Main extends GameApplication {
     @Override
     protected void initInput() {
         Input input = getInput();
-        input.addAction(UserActionFactory.createMouseLeft(), MouseButton.PRIMARY);
-        input.addAction(UserActionFactory.createMouseRight(), MouseButton.SECONDARY);
+        UserActionFactory.addInputs(input);
     }
 
     @Override

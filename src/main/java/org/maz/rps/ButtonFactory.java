@@ -1,10 +1,11 @@
-package org.maz;
+package org.maz.rps;
 
-import atlantafx.base.theme.Styles;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
+
+import atlantafx.base.theme.Styles;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 

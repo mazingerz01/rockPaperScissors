@@ -1,4 +1,4 @@
-package org.maz.components;
+package org.maz.rps.components;
 
 import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
 

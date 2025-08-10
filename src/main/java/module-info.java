@@ -1,4 +1,4 @@
-open module rockPaperScissors {
+module rockPaperScissors {
     requires com.almasb.fxgl.all;
     requires annotations;
     requires atlantafx.base;
@@ -7,4 +7,11 @@ open module rockPaperScissors {
     requires org.kordamp.ikonli.materialdesign2;
     requires org.kordamp.ikonli.core;
     requires java.desktop;
+
+    requires javafx.controls;
+    requires javafx.fxml;
+
+    opens org.maz.rps to javafx.fxml;
+    exports org.maz.rps;
+
 }
