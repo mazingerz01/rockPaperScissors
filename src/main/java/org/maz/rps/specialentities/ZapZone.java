@@ -9,14 +9,14 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeLineCap;
 
 import com.almasb.fxgl.entity.Entity;
-import org.maz.rps.Main;
+import org.maz.rps.RPSApp;
 import org.maz.rps.components.RotateComponent;
 
 public class ZapZone extends Entity {
     public static final double RADIUS = 100.0;
 
     public ZapZone() {
-        this.setType(Main.SpecialEntityType.ZAP_ZONE);
+        this.setType(RPSApp.SpecialEntityType.ZAP_ZONE);
         this.setPosition(getInput().getMouseXWorld(), getInput().getMouseYWorld());
         this.getViewComponent().addChild(getCircleShape());
         this.addComponent(new RotateComponent());

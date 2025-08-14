@@ -12,7 +12,7 @@ import javafx.util.Duration;
 import atlantafx.base.theme.Styles;
 import org.kordamp.ikonli.feather.Feather;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.maz.rps.Main;
+import org.maz.rps.RPSApp;
 
 public class ZapZoneButton extends Button {
     public ZapZoneButton() {
@@ -23,7 +23,7 @@ public class ZapZoneButton extends Button {
         getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.BUTTON_ICON);
         setOnMouseClicked((event -> {
             getGameScene().setCursor(Cursor.NONE);
-            Main.setZapZone(new ZapZone());
+            RPSApp.setZapZone(new ZapZone());
         }));
         applyAnimations();
         setOpacity(0.4);

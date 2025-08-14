@@ -26,7 +26,7 @@ import org.maz.rps.components.MoveComponent;
 import org.maz.rps.specialentities.ZapZoneButton;
 
 public class InGameUI extends BorderPane {
-    InGameUI(EnumMap<Main.EntityType, SimpleIntegerProperty> entityCounts, SimpleIntegerProperty totalCount) {
+    InGameUI(EnumMap<RPSApp.EntityType, SimpleIntegerProperty> entityCounts, SimpleIntegerProperty totalCount) {
         this.setOpacity(0.5);
         this.setPrefWidth(getAppWidth());
 
@@ -38,7 +38,7 @@ public class InGameUI extends BorderPane {
         VBox progressBarsContainer = new VBox();
         progressBarsContainer.setAlignment(Pos.CENTER_RIGHT);
         progressBarsContainer.setPadding(new Insets(10));
-        Arrays.stream(Main.EntityType.values()).forEach((type) -> {
+        Arrays.stream(RPSApp.EntityType.values()).forEach((type) -> {
             Label progressBarLabel = new Label(type.name());
             ProgressBar progressBar = new javafx.scene.control.ProgressBar();
             progressBar.setPrefWidth(200.0);
@@ -61,22 +61,22 @@ public class InGameUI extends BorderPane {
         });
 
         ToggleButton killModeButton = ButtonFactory.createToggleButton(MaterialDesignS.SKULL_CROSSBONES_OUTLINE,
-                e -> Main.setKillMode(!Main.isKillMode()));
+                e -> RPSApp.setKillMode(!RPSApp.isKillMode()));
 
         ToggleButton playPauseButton = ButtonFactory.createToggleButton(Feather.PAUSE_CIRCLE, e -> {
-            if (Main.isPauseMode()) {
-                getGameWorld().getEntities().stream().filter(ent -> !ent.isType(Main.SpecialEntityType.ZAP_ZONE)).forEach(entity -> {
+            if (RPSApp.isPauseMode()) {
+                getGameWorld().getEntities().stream().filter(ent -> !ent.isType(RPSApp.SpecialEntityType.ZAP_ZONE)).forEach(entity -> {
                     entity.removeComponent(FloatMoveComponent.class);
                     entity.addComponent(new MoveComponent());
                 });
             }
             else {
-                getGameWorld().getEntities().stream().filter(ent -> !ent.isType(Main.SpecialEntityType.ZAP_ZONE)).forEach(entity -> {
+                getGameWorld().getEntities().stream().filter(ent -> !ent.isType(RPSApp.SpecialEntityType.ZAP_ZONE)).forEach(entity -> {
                     entity.removeComponent(MoveComponent.class);
                     entity.addComponent(new FloatMoveComponent());
                 });
             }
-            Main.setPauseMode(!Main.isPauseMode());
+            RPSApp.setPauseMode(!RPSApp.isPauseMode());
         });
 
         HBox menuContainerButtons = new HBox(clearButton, killModeButton, playPauseButton, new ZapZoneButton());

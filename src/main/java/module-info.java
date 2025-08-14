@@ -1,4 +1,4 @@
-module rockPaperScissors {
+open module rockPaperScissors {
     requires com.almasb.fxgl.all;
     requires annotations;
     requires atlantafx.base;
@@ -10,8 +10,4 @@ module rockPaperScissors {
 
     requires javafx.controls;
     requires javafx.fxml;
-
-    opens org.maz.rps to javafx.fxml;
-    exports org.maz.rps;
-
 }

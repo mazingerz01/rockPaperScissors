@@ -28,31 +28,31 @@ public class UserActionFactory {
         input.addAction(new UserAction("mouse left") {
             @Override
             protected void onActionBegin() {
-                if (Main.getZapZone() != null) {
-                    List<Entity> removeList = getGameWorld().getEntities().stream().filter(ent -> ent.distanceBBox(Main.getZapZone()) < ZapZone.RADIUS).toList();
+                if (RPSApp.getZapZone() != null) {
+                    List<Entity> removeList = getGameWorld().getEntities().stream().filter(ent -> ent.distanceBBox(RPSApp.getZapZone()) < ZapZone.RADIUS).toList();
                     // Entitylist for removal also contains zapZone.
                     removeList.forEach(e -> {
-                        if (e.getType() != Main.SpecialEntityType.ZAP_ZONE) {
+                        if (e.getType() != RPSApp.SpecialEntityType.ZAP_ZONE) {
                             ParticleEmitter emitter = CollisionEmitterFactory.getCollisionEmitter();
-                            Main.getParticleSystem().addParticleEmitter(emitter, e.getX(), e.getY());
+                            RPSApp.getParticleSystem().addParticleEmitter(emitter, e.getX(), e.getY());
                         }
                     });
                     Platform.runLater(() -> {
                         // onActionEnd will not be triggered if runLater is not used. https://github.com/AlmasB/FXGL/discussions/1426
                         getGameWorld().removeEntities(removeList);
-                        Main.setZapZone(null);
+                        RPSApp.setZapZone(null);
                     });
-                    getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(Main.getImagename(Main.getCurrentlySelected()))));
+                    getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(RPSApp.getImagename(RPSApp.getCurrentlySelected()))));
                 }
                 else {
                     // There is no possibility of resetting the timer, so create a new one
-                    spawnTimerAction = FXGLForKtKt.getGameTimer().runAtInterval(() -> Main.spawnEntity(Main.getCurrentlySelected()), Duration.seconds(0.08));
+                    spawnTimerAction = FXGLForKtKt.getGameTimer().runAtInterval(() -> RPSApp.spawnEntity(RPSApp.getCurrentlySelected()), Duration.seconds(0.08));
                 }
             }
 
             @Override
             protected void onActionEnd() {
-                if (Main.getZapZone() == null) {
+                if (RPSApp.getZapZone() == null) {
                     spawnTimerAction.expire();
                 }
             }
@@ -61,11 +61,11 @@ public class UserActionFactory {
         input.addAction(new UserAction("mouse right") {
             @Override
             protected void onActionBegin() {
-                if (Main.getZapZone() == null) {
+                if (RPSApp.getZapZone() == null) {
                     int newIndex =
-                            Main.getCurrentlySelected().ordinal() == Main.EntityType.values().length - 1 ? 0 : Main.getCurrentlySelected().ordinal() + 1;
-                    Main.setCurrentlySelected(Main.EntityType.values()[newIndex]);
-                    getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(Main.getImagename(Main.getCurrentlySelected()))));
+                            RPSApp.getCurrentlySelected().ordinal() == RPSApp.EntityType.values().length - 1 ? 0 : RPSApp.getCurrentlySelected().ordinal() + 1;
+                    RPSApp.setCurrentlySelected(RPSApp.EntityType.values()[newIndex]);
+                    getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(RPSApp.getImagename(RPSApp.getCurrentlySelected()))));
                 }
             }
         }, MouseButton.SECONDARY);

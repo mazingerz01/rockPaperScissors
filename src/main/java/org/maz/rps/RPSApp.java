@@ -38,8 +38,8 @@ import org.maz.rps.components.MoveComponent;
 import org.maz.rps.menu.RPSSceneFactory;
 import org.maz.rps.specialentities.ZapZone;
 
-public class Main extends GameApplication {
-    private static final Logger LOGGER = Logger.get(Main.class);
+public class RPSApp extends GameApplication {
+    private static final Logger LOGGER = Logger.get(RPSApp.class);
 
     private static final double SCREEN_RATIO = 0.9;
     public static final String VERSION = "1.0";
@@ -75,7 +75,7 @@ public class Main extends GameApplication {
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         settings.setFullScreenAllowed(true);
-        settings.setFullScreenFromStart(false);   // via menue?
+        settings.setFullScreenFromStart(false);   // via menu?
         settings.setWidth((int) (screenSize.getWidth() * SCREEN_RATIO));
         settings.setHeight((int) (screenSize.getHeight() * SCREEN_RATIO));
         settings.setSceneFactory(new RPSSceneFactory());
@@ -168,7 +168,7 @@ public class Main extends GameApplication {
     }
 
     public static void setKillMode(boolean killMode) {
-        Main.killMode = killMode;
+        RPSApp.killMode = killMode;
     }
 
     public static boolean isKillMode() {
@@ -180,11 +180,11 @@ public class Main extends GameApplication {
     }
 
     public static void setPauseMode(boolean pauseMode) {
-        Main.pauseMode = pauseMode;
+        RPSApp.pauseMode = pauseMode;
     }
 
     public static void setZapZone(ZapZone entity) {
-        Main.zapZone = entity;
+        RPSApp.zapZone = entity;
         if (entity != null) {
             getGameWorld().addEntity(entity);
         }

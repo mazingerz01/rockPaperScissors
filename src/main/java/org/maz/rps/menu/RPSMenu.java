@@ -22,7 +22,7 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.ui.FontType;
-import org.maz.rps.Main;
+import org.maz.rps.RPSApp;
 
 public class RPSMenu extends FXGLMenu {
 
@@ -32,7 +32,7 @@ public class RPSMenu extends FXGLMenu {
         getContentRoot().setPrefHeight(FXGL.getAppHeight());
         getContentRoot().setCursor(Cursor.DEFAULT);
 
-        Text credits1 = FXGL.getUIFactoryService().newText("Rock Paper Scissors " + Main.VERSION, Color.WHITE, FontType.GAME, 24.0);
+        Text credits1 = FXGL.getUIFactoryService().newText("Rock Paper Scissors " + RPSApp.VERSION, Color.WHITE, FontType.GAME, 24.0);
         Text credits2 = FXGL.getUIFactoryService().newText("Created by mazingerz01 - okifenoki@mailbox.org", Color.WHITE, 18);
         Text credits3 = FXGL.getUIFactoryService().newText("""
                 A big thank you to the following people/libraries:
@@ -40,7 +40,7 @@ public class RPSMenu extends FXGLMenu {
                 """, Color.WHITE, 18);
 
         var butResume = getButton("Resume", e -> {
-            getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(Main.getImagename(Main.getCurrentlySelected()))));
+            getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(RPSApp.getImagename(RPSApp.getCurrentlySelected()))));
             fireResume();
         });
 

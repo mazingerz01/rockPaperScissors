@@ -44,7 +44,7 @@
                     <noManPages>true</noManPages>
                     <launcher>startGame</launcher>
                     <jlinkImageName>game</jlinkImageName>
-                    <mainClass>rockPaperScissors/org.maz.rps.Main</mainClass>
+                    <mainClass>rockPaperScissors/org.maz.rps.RPSApp</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -52,7 +52,7 @@
                 <artifactId>jpro-maven-plugin</artifactId>
                 <version>${jpro.version}</version>
                 <configuration>
-                    <mainClassName>org.maz.rps.Main</mainClassName>
+                    <mainClassName>org.maz.rps.RPSWebApp</mainClassName>
                 </configuration>
             </plugin>
         </plugins>
@@ -135,12 +135,14 @@
             <artifactId>ikonli-materialdesign2-pack</artifactId>
             <version>12.4.0</version>
         </dependency>
+        <!-- TODO
         <dependency>
             <groupId>org.tribuo</groupId>
             <artifactId>tribuo-all</artifactId>
             <version>4.3.2</version>
             <type>pom</type>
         </dependency>
+        -->
     </dependencies>
 
 </project>
