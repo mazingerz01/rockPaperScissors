@@ -13,7 +13,10 @@ import org.maz.rps.RPSApp;
 import org.maz.rps.components.RotateComponent;
 
 public class ZapZone extends Entity {
-    public static final double RADIUS = 100.0;
+    private double radius = 100.0;
+    private static final double RADIUS_STEP = 10;
+    private static final double RADIUS_MIN = 30;
+    private static final double RADIUS_MAX = 190;
 
     public ZapZone() {
         this.setType(RPSApp.SpecialEntityType.ZAP_ZONE);
@@ -26,7 +29,7 @@ public class ZapZone extends Entity {
     }
 
     private Circle getCircleShape() {
-        Circle circle = new Circle(RADIUS);
+        Circle circle = new Circle(radius);
         circle.setStroke(Color.MAGENTA);
         circle.setFill(new BackgroundFill(new Color(0.99, 0.28, 0.75, 0.15), null, null).getFill());
         circle.setStrokeWidth(3);
@@ -35,4 +38,12 @@ public class ZapZone extends Entity {
         return circle;
     }
 
+    public double getRadius() {
+        return radius;
+    }
+
+    public void changeRadius(boolean grow) {
+        radius += grow ? radius + RADIUS_STEP <= RADIUS_MAX ? +RADIUS_STEP : 0 : radius - RADIUS_STEP >= RADIUS_MIN ? -RADIUS_STEP : 0;
+        this.getViewComponent().getChild(0, Circle.class).setRadius(radius);
+    }
 }

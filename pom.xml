@@ -6,7 +6,7 @@
 
     <groupId>org.maz</groupId>
     <artifactId>rockPaperScissors</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -15,12 +15,10 @@
 
         <javafx.version>23.0.1</javafx.version>
         <fxgl.version>21.1</fxgl.version>
-        <jpro.version>2025.2.1</jpro.version>
 
         <maven.shade.version>3.0.0</maven.shade.version>
         <maven.compiler.version>3.14.0</maven.compiler.version>
     </properties>
-
 
     <build>
         <plugins>
@@ -34,6 +32,7 @@
                     <release>${java.version}</release>
                 </configuration>
             </plugin>
+            <!--
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -47,30 +46,33 @@
                     <mainClass>rockPaperScissors/org.maz.rps.RPSApp</mainClass>
                 </configuration>
             </plugin>
+            -->
             <plugin>
-                <groupId>one.jpro</groupId>
-                <artifactId>jpro-maven-plugin</artifactId>
-                <version>${jpro.version}</version>
-                <configuration>
-                    <mainClassName>org.maz.rps.RPSWebApp</mainClassName>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.maz.rps.RPSApp</mainClass>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jpro - sandec repository</id>
-            <url>https://sandec.jfrog.io/artifactory/repo</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <repositories>
-        <repository>
-            <id>jpro - sandec repository</id>
-            <url>https://sandec.jfrog.io/artifactory/repo</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
@@ -94,12 +96,6 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
             <version>${javafx.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>one.jpro</groupId>
-            <artifactId>jpro-webapi</artifactId>
-            <version>${jpro.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

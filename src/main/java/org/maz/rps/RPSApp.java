@@ -1,8 +1,6 @@
 package org.maz.rps;
 
-import static com.almasb.fxgl.dsl.FXGL.animationBuilder;
 import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
-import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
 import static com.almasb.fxgl.dsl.FXGL.getGameWorld;
 import static com.almasb.fxgl.dsl.FXGL.getInput;
 import static com.almasb.fxgl.dsl.FXGL.onCollisionBegin;
@@ -12,7 +10,6 @@ import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.ImageCursor;
-import javafx.util.Duration;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -21,9 +18,6 @@ import java.util.EnumMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import atlantafx.base.theme.PrimerLight;
-import com.almasb.fxgl.animation.AnimatedValue;
-import com.almasb.fxgl.animation.Animation;
-import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.EntityBuilder;
@@ -52,10 +46,9 @@ public class RPSApp extends GameApplication {
     private static boolean killMode;
     private static boolean pauseMode;
     private static ZapZone zapZone;
+    private static InGameUI inGameUI;
 
     //xxxxm tribuo:  csv   e.g. for 1 line: 200,34,23,23,rock
-
-    // TODO zapzone works only with 2nd click beginning with 2nd use
 
     private interface IEntity {
     }
@@ -81,6 +74,7 @@ public class RPSApp extends GameApplication {
         settings.setSceneFactory(new RPSSceneFactory());
         settings.setMainMenuEnabled(false);
         settings.setDeveloperMenuEnabled(false);
+
     }
 
     @Override
@@ -122,12 +116,12 @@ public class RPSApp extends GameApplication {
     @Override
     protected void initInput() {
         Input input = getInput();
-        UserActionFactory.addInputs(input);
+        UserAction.addInputs(input);
     }
 
     @Override
     protected void initUI() {
-        InGameUI inGameUI = new InGameUI(entityCounts, totalCount);
+        inGameUI = new InGameUI(entityCounts, totalCount);
         getGameScene().addUINode(inGameUI);
         getGameScene().setUIMouseTransparent(false);
     }
@@ -206,17 +200,7 @@ public class RPSApp extends GameApplication {
         currentlySelected = value;
     }
 
-    private void animateCamera(Runnable onAnimationFinished) {
-        AnimatedValue<Double> value = new AnimatedValue<>(getAppHeight() * 1.0, 0.0);
-        Animation<Double> cameraAnimation = animationBuilder()
-                .duration(Duration.seconds(0.5))
-                .interpolator(Interpolators.EXPONENTIAL.EASE_OUT())
-                .onFinished(onAnimationFinished::run)
-                .animate(value)
-                .onProgress(y -> FXGL.getGameScene().getViewport().setY(y))
-                .build();
-
-        cameraAnimation.start();
+    public static InGameUI getInGameUI() {
+        return inGameUI;
     }
-
 }

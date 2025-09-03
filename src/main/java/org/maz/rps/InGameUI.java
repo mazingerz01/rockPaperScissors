@@ -26,6 +26,8 @@ import org.maz.rps.components.MoveComponent;
 import org.maz.rps.specialentities.ZapZoneButton;
 
 public class InGameUI extends BorderPane {
+    private ZapZoneButton zapZoneButton = new ZapZoneButton();
+
     InGameUI(EnumMap<RPSApp.EntityType, SimpleIntegerProperty> entityCounts, SimpleIntegerProperty totalCount) {
         this.setOpacity(0.5);
         this.setPrefWidth(getAppWidth());
@@ -79,7 +81,7 @@ public class InGameUI extends BorderPane {
             RPSApp.setPauseMode(!RPSApp.isPauseMode());
         });
 
-        HBox menuContainerButtons = new HBox(clearButton, killModeButton, playPauseButton, new ZapZoneButton());
+        HBox menuContainerButtons = new HBox(clearButton, killModeButton, playPauseButton, zapZoneButton);
         // menuContainerButtons.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
         menuContainerButtons.setSpacing(10);
         menuContainerButtons.setTranslateX(10);
@@ -89,4 +91,7 @@ public class InGameUI extends BorderPane {
         return menuContainerButtons;
     }
 
+    public ZapZoneButton getZapZoneButton() {
+        return zapZoneButton;
+    }
 }

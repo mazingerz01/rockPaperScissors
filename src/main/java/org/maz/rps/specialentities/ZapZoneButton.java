@@ -15,6 +15,8 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.maz.rps.RPSApp;
 
 public class ZapZoneButton extends Button {
+    private boolean active = false;
+
     public ZapZoneButton() {
         setAlignment(Pos.CENTER);
         setTranslateX(10);
@@ -22,16 +24,19 @@ public class ZapZoneButton extends Button {
         setGraphic(zap);
         getStyleClass().addAll(Styles.BUTTON_OUTLINED, Styles.BUTTON_ICON);
         setOnMouseClicked((event -> {
-            getGameScene().setCursor(Cursor.NONE);
-            RPSApp.setZapZone(new ZapZone());
+            if (active) {
+                active=false;
+                getGameScene().setCursor(Cursor.NONE);
+                RPSApp.setZapZone(new ZapZone());
+            }
         }));
         applyAnimations();
-        setOpacity(0.4);
     }
 
     private void applyAnimations() {
-        // Slowly make powerup visible
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(2), this);  //xxxm set to 15sec
+        // Slowly make button visible
+        setOpacity(0.4);
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(15), this);
         translateTransition.setFromY(-50);
         translateTransition.setToY(0);
         translateTransition.setOnFinished((event) -> {
@@ -43,7 +48,13 @@ public class ZapZoneButton extends Button {
             pulseAnimation.setAutoReverse(true);
             pulseAnimation.setCycleCount(2);
             pulseAnimation.play();
+            active = true;
         });
         translateTransition.play();
+    }
+
+    public void reset() {
+        active = false;
+        applyAnimations();
     }
 }
