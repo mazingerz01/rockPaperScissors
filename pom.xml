@@ -6,7 +6,7 @@
 
     <groupId>org.maz</groupId>
     <artifactId>rockPaperScissors</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -15,12 +15,44 @@
 
         <javafx.version>23.0.1</javafx.version>
         <fxgl.version>21.1</fxgl.version>
-        <jpro.version>2025.2.1</jpro.version>
 
         <maven.shade.version>3.0.0</maven.shade.version>
         <maven.compiler.version>3.14.0</maven.compiler.version>
     </properties>
 
+    <profiles>
+        <!-- Profile to run with native agent -->
+        <profile>
+            <id>native</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>java-agent</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>none</phase>
+                                <configuration>
+                                    <executable>java</executable>
+                                    <workingDirectory>${project.build.directory}</workingDirectory>
+                                    <arguments>
+                                        <argument>-classpath</argument>
+                                        <classpath />
+                                        <argument>org.maz.rps.RPSApp</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -34,6 +66,7 @@
                     <release>${java.version}</release>
                 </configuration>
             </plugin>
+            <!--
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -47,30 +80,55 @@
                     <mainClass>rockPaperScissors/org.maz.rps.RPSApp</mainClass>
                 </configuration>
             </plugin>
+            -->
             <plugin>
-                <groupId>one.jpro</groupId>
-                <artifactId>jpro-maven-plugin</artifactId>
-                <version>${jpro.version}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.maz.rps.RPSApp</mainClass>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer">
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <version>0.11.0</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>build-native</id>
+                        <goals>
+                            <goal>compile-no-fork</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
                 <configuration>
-                    <mainClassName>org.maz.rps.RPSWebApp</mainClassName>
+                    <imageName>rps</imageName>
+                    <mainClass>org.maz.rps.RPSApp</mainClass>
+                    <fallback>false</fallback>
+                    <verbose>true</verbose>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jpro - sandec repository</id>
-            <url>https://sandec.jfrog.io/artifactory/repo</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <repositories>
-        <repository>
-            <id>jpro - sandec repository</id>
-            <url>https://sandec.jfrog.io/artifactory/repo</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
@@ -94,12 +152,6 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
             <version>${javafx.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>one.jpro</groupId>
-            <artifactId>jpro-webapi</artifactId>
-            <version>${jpro.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
