@@ -1,13 +1,24 @@
 open module rockPaperScissors {
+    // JavaFX
+    requires javafx.controls;
+    requires javafx.graphics;
+
+    // FXGL
     requires com.almasb.fxgl.all;
-    requires annotations;
+
+    // Theme / UI
     requires atlantafx.base;
+
+    // Icons
+    requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.feather;
     requires org.kordamp.ikonli.materialdesign2;
-    requires org.kordamp.ikonli.core;
+
+    // Misc.
+    requires annotations;
     requires java.desktop;
 
-    requires javafx.controls;
-    requires javafx.fxml;
+    // Export your game package
+    exports org.maz.rps;
 }
