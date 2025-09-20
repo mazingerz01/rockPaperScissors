@@ -4,19 +4,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.maz</groupId>
-    <artifactId>rockPaperScissors</artifactId>
-    <version>1.0</version>
-    <packaging>jar</packaging>
-
     <properties>
+        <project.name>RockPaperScissors</project.name>
+
+
         <java.version>22</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
         <javafx.version>23.0.1</javafx.version>
         <fxgl.version>21.1</fxgl.version>
         <maven.compiler.version>3.14.0</maven.compiler.version>
+        <javapackager.version>1.7.6</javapackager.version>
     </properties>
+
+    <groupId>org.maz</groupId>
+    <artifactId>rps</artifactId>
+    <version>${project.version}</version>
 
     <build>
         <plugins>
@@ -29,6 +31,43 @@
                     <target>${java.version}</target>
                     <release>${java.version}</release>
                 </configuration>
+            </plugin>
+
+            <!-- For manifest and version xxxm? -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Implementation-Version>${project.version}</Implementation-Version>
+                            <Implementation-Title>${project.name}</Implementation-Title>
+                            <Implementation-Vendor>${project.groupId}</Implementation-Vendor>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>io.github.fvarrui</groupId>
+                <artifactId>javapackager</artifactId>
+                <version>${javapackager.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.maz.rps.RPSApp</mainClass>
+                            <bundleJre>true</bundleJre>
+                            <generateInstaller>false</generateInstaller>
+                            <administratorRequired>false</administratorRequired>
+                            <platform>windows</platform>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
