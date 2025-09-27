@@ -6,14 +6,12 @@
 
     <properties>
         <project.name>RockPaperScissors</project.name>
-
+        <project.version>v0.0.0<!-- version is controlled by jgitver-maven-plugin and git tags --></project.version>
 
         <java.version>22</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>23.0.1</javafx.version>
         <fxgl.version>21.1</fxgl.version>
-        <maven.compiler.version>3.14.0</maven.compiler.version>
-        <javapackager.version>1.7.6</javapackager.version>
     </properties>
 
     <groupId>org.maz</groupId>
@@ -25,7 +23,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.version}</version>
+                <version>3.14.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -33,26 +31,10 @@
                 </configuration>
             </plugin>
 
-            <!-- For manifest and version xxxm? -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Implementation-Version>${project.version}</Implementation-Version>
-                            <Implementation-Title>${project.name}</Implementation-Title>
-                            <Implementation-Vendor>${project.groupId}</Implementation-Vendor>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>io.github.fvarrui</groupId>
                 <artifactId>javapackager</artifactId>
-                <version>${javapackager.version}</version>
+                <version>1.7.6</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -65,6 +47,14 @@
                             <generateInstaller>false</generateInstaller>
                             <administratorRequired>false</administratorRequired>
                             <platform>windows</platform>
+
+                            <manifest>
+                                <additionalEntries>
+                                    <Implementation-Title>${project.name}</Implementation-Title>
+                                    <Implementation-Version>${project.version}</Implementation-Version>
+                                    <Implementation-Vendor>${project.groupId}</Implementation-Vendor>
+                                </additionalEntries>
+                            </manifest>
                         </configuration>
                     </execution>
                 </executions>

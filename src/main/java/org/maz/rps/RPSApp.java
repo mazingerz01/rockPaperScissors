@@ -36,7 +36,7 @@ public class RPSApp extends GameApplication {
     private static final Logger LOGGER = Logger.get(RPSApp.class);
 
     private static final double SCREEN_RATIO = 0.9;
-    public static final String VERSION = "1.0";
+    public static final String VERSION = RPSApp.class.getPackage().getImplementationVersion() == null ? "vDEV" : RPSApp.class.getPackage().getImplementationVersion();
 
     private static EntityType currentlySelected = EntityType.ROCK;
     private final EnumMap<EntityType, SimpleIntegerProperty> entityCounts = new EnumMap<>(EntityType.class);
@@ -48,6 +48,9 @@ public class RPSApp extends GameApplication {
     private static ZapZone zapZone;
     private static InGameUI inGameUI;
 
+    // TODO
+    // TODO Log abdrehen
+    // TODO JRE verschlanken (diverse modules weg?) fertifges dir derzeit: 124MB
     //xxxxm tribuo:  csv   e.g. for 1 line: 200,34,23,23,rock
 
     private interface IEntity {
@@ -90,21 +93,21 @@ public class RPSApp extends GameApplication {
 
     @Override
     protected void initPhysics() {
-        onCollisionBegin(EntityType.ROCK, EntityType.PAPER, (r, p) -> {
+        onCollisionBegin(EntityType.ROCK, EntityType.PAPER, (r, _) -> {
             r.removeFromWorld();
             if (!killMode) {
                 spawnEntity(EntityType.PAPER, r.getAnchoredPosition())
                         .addComponent(new ParticleComponent(CollisionEmitterFactory.getCollisionEmitter()));
             }
         });
-        onCollisionBegin(EntityType.ROCK, EntityType.SCISSORS, (r, s) -> {
+        onCollisionBegin(EntityType.ROCK, EntityType.SCISSORS, (_, s) -> {
             s.removeFromWorld();
             if (!killMode) {
                 spawnEntity(EntityType.ROCK, s.getAnchoredPosition())
                         .addComponent(new ParticleComponent(CollisionEmitterFactory.getCollisionEmitter()));
             }
         });
-        onCollisionBegin(EntityType.PAPER, EntityType.SCISSORS, (p, s) -> {
+        onCollisionBegin(EntityType.PAPER, EntityType.SCISSORS, (p, _) -> {
             p.removeFromWorld();
             if (!killMode) {
                 spawnEntity(EntityType.SCISSORS, p.getAnchoredPosition())
