@@ -15,12 +15,10 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.dsl.FXGLForKtKt;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.Input;
-import com.almasb.fxgl.logging.Logger;
 import com.almasb.fxgl.particle.ParticleEmitter;
 import com.almasb.fxgl.time.TimerAction;
 
 public class UserAction {
-    private static final Logger LOGGER = Logger.get("xxxm");
     private static TimerAction spawnTimerAction;
 
     public static void addInputs(Input input) {

@@ -39,12 +39,12 @@ public class RPSMenu extends FXGLMenu {
                 * FXGL - JavaFX Game Library (MIT License), Copyright (c) AlmasB (almaslvl@gmail.com)
                 """, Color.WHITE, 18);
 
-        var butResume = getButton("Resume", e -> {
+        var butResume = getButton("Resume", _ -> {
             getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(RPSApp.getImagename(RPSApp.getCurrentlySelected()))));
             fireResume();
         });
 
-        var butExit = getButton("Exit game", e -> fireExit());
+        var butExit = getButton("Exit game", _ -> fireExit());
 
         Text help = FXGL.getUIFactoryService().newText("""
                 Help:

@@ -24,7 +24,6 @@ import com.almasb.fxgl.dsl.EntityBuilder;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.input.Input;
-import com.almasb.fxgl.logging.Logger;
 import com.almasb.fxgl.particle.ParticleComponent;
 import com.almasb.fxgl.particle.ParticleSystem;
 import org.maz.rps.components.FloatMoveComponent;
@@ -33,10 +32,9 @@ import org.maz.rps.menu.RPSSceneFactory;
 import org.maz.rps.specialentities.ZapZone;
 
 public class RPSApp extends GameApplication {
-    private static final Logger LOGGER = Logger.get(RPSApp.class);
-
     private static final double SCREEN_RATIO = 0.9;
-    public static final String VERSION = RPSApp.class.getPackage().getImplementationVersion() == null ? "vDEV" : RPSApp.class.getPackage().getImplementationVersion();
+    public static final boolean DEV = RPSApp.class.getPackage().getImplementationVersion() == null;
+    public static final String VERSION = DEV ? "vDEV" : RPSApp.class.getPackage().getImplementationVersion();
 
     private static EntityType currentlySelected = EntityType.ROCK;
     private final EnumMap<EntityType, SimpleIntegerProperty> entityCounts = new EnumMap<>(EntityType.class);
@@ -49,11 +47,11 @@ public class RPSApp extends GameApplication {
     private static InGameUI inGameUI;
 
     // TODO
-    // TODO Log abdrehen
+    // TODO Log file write abdrehen. log bei !Dev level auf FATAL
     // TODO JRE verschlanken (diverse modules weg?) fertifges dir derzeit: 124MB
     //xxxxm tribuo:  csv   e.g. for 1 line: 200,34,23,23,rock
 
-    private interface IEntity {
+    public interface IEntity {
     }
 
     public enum EntityType implements IEntity {

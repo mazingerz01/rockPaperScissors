@@ -21,4 +21,5 @@ open module rockPaperScissors {
 
     // Export your game package
     exports org.maz.rps;
+    exports org.maz.rps.specialentities;
 }
