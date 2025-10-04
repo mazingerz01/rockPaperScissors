@@ -18,6 +18,7 @@ import java.util.EnumMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import atlantafx.base.theme.PrimerLight;
+import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.EntityBuilder;
@@ -41,15 +42,13 @@ public class RPSApp extends GameApplication {
     private final SimpleIntegerProperty totalCount = new SimpleIntegerProperty(0);
     private static final ParticleSystem particleSystem = new ParticleSystem();
 
-    private static boolean killMode;
+    private static boolean killMode; // Entities kill each other instead of turning into the winner
     private static boolean pauseMode;
-    private static ZapZone zapZone;
+    private static ZapZone zapZone; // Selectively remove entities
     private static InGameUI inGameUI;
 
     // TODO
-    // TODO Log file write abdrehen. log bei !Dev level auf FATAL
     // TODO JRE verschlanken (diverse modules weg?) fertifges dir derzeit: 124MB
-    //xxxxm tribuo:  csv   e.g. for 1 line: 200,34,23,23,rock
 
     public interface IEntity {
     }
@@ -66,21 +65,22 @@ public class RPSApp extends GameApplication {
     protected void initSettings(GameSettings settings) {
         settings.setTitle("Rock Paper Scissors");
         settings.setVersion(VERSION);
+        settings.setFileSystemWriteAllowed(false); // Prevent file logging
+        settings.setApplicationMode(DEV ? ApplicationMode.DEVELOPER : ApplicationMode.RELEASE); // Switch to DEBUG for more log details
+        settings.setSceneFactory(new RPSSceneFactory());
+        settings.setMainMenuEnabled(false);
+        settings.setDeveloperMenuEnabled(false);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         settings.setFullScreenAllowed(true);
         settings.setFullScreenFromStart(false);   // via menu?
         settings.setWidth((int) (screenSize.getWidth() * SCREEN_RATIO));
         settings.setHeight((int) (screenSize.getHeight() * SCREEN_RATIO));
-        settings.setSceneFactory(new RPSSceneFactory());
-        settings.setMainMenuEnabled(false);
-        settings.setDeveloperMenuEnabled(false);
-
     }
 
     @Override
     protected void initGame() {
-        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet()); // AtlantaFX
         currentlySelected = EntityType.values()[0];
         getGameScene().setCursor(new ImageCursor(FXGL.getAssetLoader().loadImage(getImagename(currentlySelected))));
         Arrays.stream(EntityType.values()).forEach(type -> entityCounts
