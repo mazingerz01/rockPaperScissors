@@ -47,9 +47,6 @@ public class RPSApp extends GameApplication {
     private static ZapZone zapZone; // Selectively remove entities
     private static InGameUI inGameUI;
 
-    // TODO
-    // TODO JRE verschlanken (diverse modules weg?) fertifges dir derzeit: 124MB
-
     public interface IEntity {
     }
 

@@ -19,7 +19,7 @@ open module rockPaperScissors {
     requires annotations;
     requires java.desktop;
 
-    // Export your game package
+    // Export games package so FXGl can access them
     exports org.maz.rps;
     exports org.maz.rps.specialentities;
 }
