@@ -13,6 +13,6 @@ Techniques used:
 
 <p align="center">
 <img src="src/main/resources/assets/textures/rock.png"  alt=""/>
-![](src/main/resources/assets/textures/paper.png)
-![](src/main/resources/assets/textures/scissors.png)
+<img src="src/main/resources/assets/textures/paper.png" alt=""/>
+<img src="src/main/resources/assets/textures/scissors.png" alt=""/>
 </p>
