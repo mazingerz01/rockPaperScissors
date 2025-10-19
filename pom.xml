@@ -47,6 +47,20 @@
                             <generateInstaller>false</generateInstaller>
                             <administratorRequired>false</administratorRequired>
                             <platform>windows</platform>
+                            <winConfig>
+                                <icoFile>src/main/resources/assets/textures/rock.ico</icoFile>
+                                <companyName>org.maz</companyName>
+                                <fileVersion>0.0.0.0</fileVersion>
+                                <productVersion>0.0.0.0</productVersion>
+                                <copyright>org.maz</copyright>
+                                <productName>rps</productName>
+                                <internalName>rps</internalName>
+                                <txtFileVersion>0.0.0.0</txtFileVersion>
+                                <txtProductVersion>0.0.0.0</txtProductVersion>
+                                <fileDescription>rps</fileDescription>
+                                <shortcutName>rps</shortcutName>
+                                <originalFilename>rps.exe</originalFilename>
+                            </winConfig>
 
                             <manifest>
                                 <additionalEntries>
