@@ -48,7 +48,7 @@
                             <administratorRequired>false</administratorRequired>
                             <platform>windows</platform>
                             <winConfig>
-                                <icoFile>src/main/resources/assets/textures/rock.ico</icoFile>
+                                <icoFile>src/main/resources/assets/ui/icons/rock.ico</icoFile>
                                 <companyName>org.maz</companyName>
                                 <fileVersion>0.0.0.0</fileVersion>
                                 <productVersion>0.0.0.0</productVersion>

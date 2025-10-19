@@ -62,11 +62,12 @@ public class RPSApp extends GameApplication {
     protected void initSettings(GameSettings settings) {
         settings.setTitle("Rock Paper Scissors");
         settings.setVersion(VERSION);
-        settings.setFileSystemWriteAllowed(false); // Prevent file logging
+        settings.setFileSystemWriteAllowed(false); // Prevent file logging, console only
         settings.setApplicationMode(DEV ? ApplicationMode.DEVELOPER : ApplicationMode.RELEASE); // Switch to DEBUG for more log details
         settings.setSceneFactory(new RPSSceneFactory());
         settings.setMainMenuEnabled(false);
         settings.setDeveloperMenuEnabled(false);
+        settings.setAppIcon("rock.png");
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         settings.setFullScreenAllowed(true);
