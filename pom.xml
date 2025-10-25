@@ -42,23 +42,40 @@
                             <goal>package</goal>
                         </goals>
                         <configuration>
+                            <name>${project.name}</name>
+                            <organizationName>maz.org</organizationName>
                             <mainClass>org.maz.rps.RPSApp</mainClass>
                             <bundleJre>true</bundleJre>
-                            <generateInstaller>false</generateInstaller>
+                            <generateInstaller>true</generateInstaller>
                             <administratorRequired>false</administratorRequired>
                             <platform>windows</platform>
+                            <administratorRequired>false</administratorRequired>
+                            <licenseFile>${project.basedir}/src/main/installer/disclaimer.rtf</licenseFile>
+
                             <winConfig>
-                                <icoFile>src/main/resources/assets/ui/icons/rock.ico</icoFile>
+                                <!-- installer settings -->
+                                <icoFile>${project.basedir}/src/main/installer/rock.ico</icoFile>
+                                <generateSetup>true</generateSetup>
+                                <generateMsi>false</generateMsi>
+                                <disableFinishedPage>false</disableFinishedPage>
+                                <disableRunAfterInstall>false</disableRunAfterInstall>
+                                <setupMode>askTheUser</setupMode>
+                                <setupLanguages>
+                                    <english>compiler:Default.isl</english>
+                                    <german>compiler:Languages\German.isl</german>
+                                </setupLanguages>
+
+                                <!-- properties of installer executable -->
                                 <companyName>org.maz</companyName>
                                 <fileVersion>0.0.0.0</fileVersion>
                                 <productVersion>0.0.0.0</productVersion>
                                 <copyright>org.maz</copyright>
-                                <productName>rps</productName>
+                                <productName>${project.name}</productName>
                                 <internalName>rps</internalName>
                                 <txtFileVersion>0.0.0.0</txtFileVersion>
                                 <txtProductVersion>0.0.0.0</txtProductVersion>
                                 <fileDescription>rps</fileDescription>
-                                <shortcutName>rps</shortcutName>
+                                <shortcutName>${project.name}</shortcutName>
                                 <originalFilename>rps.exe</originalFilename>
                             </winConfig>
 

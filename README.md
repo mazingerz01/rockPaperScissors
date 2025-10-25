@@ -4,7 +4,7 @@ This Java game/simulation lets you place rocks, papers and scissors to let them 
 
 ![gameplay](doc/rps.gif)
 
-Techniques used:
+Tools used:
 
 * FXGL (game engine)
 * AtlantaFX (style library for JavaFX controls)

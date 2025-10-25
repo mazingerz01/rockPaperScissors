@@ -33,10 +33,10 @@ public class RPSMenu extends FXGLMenu {
         getContentRoot().setCursor(Cursor.DEFAULT);
 
         Text credits1 = FXGL.getUIFactoryService().newText("Rock Paper Scissors " + RPSApp.VERSION, Color.WHITE, FontType.GAME, 24.0);
-        Text credits2 = FXGL.getUIFactoryService().newText("Created by mazingerz01 - okifenoki@mailbox.org", Color.WHITE, 18);
+        Text credits2 = FXGL.getUIFactoryService().newText("Created by mazingerz01 - https://github.com/mazingerz01/rockPaperScissors", Color.WHITE, 18);
         Text credits3 = FXGL.getUIFactoryService().newText("""
                 A big thank you to the following people/libraries:
-                * FXGL - JavaFX Game Library (MIT License), Copyright (c) AlmasB (almaslvl@gmail.com)
+                * FXGL - JavaFX Game Library (MIT License), Copyright (c) AlmasB
                 """, Color.WHITE, 18);
 
         var butResume = getButton("Resume", _ -> {
